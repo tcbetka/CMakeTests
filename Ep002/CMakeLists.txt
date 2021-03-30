@@ -6,7 +6,8 @@ project(HelloApp
         LANGUAGES CXX)
 
 # Add our source files here
-add_executable(appBinary source/main.cpp source/Complex.cpp) 
+#add_executable(appBinary source/main.cpp source/Complex.cpp) 
+add_executable(appBinary source/main.cpp) 
 
 target_compile_features(appBinary PRIVATE cxx_std_20)
 
