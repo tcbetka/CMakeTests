@@ -5,41 +5,32 @@ using std::endl;
 #include <vector>
 using std::vector;
 
-// Functors can be either classes or structs, and we can implement an inheritance hierarchy
-//  just like with other C++ constructs
-struct Test
-{
-    // Make this pure virtual
-    virtual bool operator()(std::string& test) = 0;
-};
+#include <typeinfo>
 
-// Now MatchTest MUST implement the operator() overload in order to be instantiable
-struct MatchTest : public Test 
-{
-    // This is what makes a functor a functor -- operator() can take a variable
-    //  number of arguments, and can return whatever we want 
-    bool operator()(std::string& text) {
-        return text == "lion";
-    }
-};
 
-// Test is abstract, but we can still have pointers or references to a Test object
-void check(std::string text, Test& test)
-{
-    if (test(text)) {
-        cout << "Text matches!" << endl;
-    } else {
-        cout << "No match" << endl;
-    }
-} 
 
 int main()
 {
-    MatchTest m;
-    std::string str = "lions";
+    int intNum;
+    double dblNum;
+    float fltNum;
+    char chrNum;
+    std::string str;
 
-    // Now call check() and pass it our string and our functor reference
-    check(str, m);
+    cout << typeid(intNum).name() << endl;  // output: i
+    cout << typeid(dblNum).name() << endl;  // output: d
+    cout << typeid(fltNum).name() << endl;  // output: f
+    cout << typeid(chrNum).name() << endl;  // output: c
+    cout << typeid(str).name() << endl;     // ouput: a mangled name
+
+    // decltype is a C++11 construct that allows us to declare variables based upon that 
+    //  of an existing type. This is useful when we need to create a variable but we don't 
+    //  actually know the type--but we can get it from the type of other variables in our program.
+    // For example: This will create number as an integer
+    decltype(intNum) number;
+    cout << typeid(number).name() << endl; // output: i
+
+
 
     return 0;
 }
