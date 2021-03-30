@@ -2,31 +2,44 @@
 using std::cout;
 using std::endl;
 
-void test() 
+#include <vector>
+using std::vector;
+
+bool match(std::string test)
 {
-    cout << "Hello" << endl;
+    // Check to see if the string size is 3 chars
+    return test.size() == 3;
 }
 
-void test2(int a)
+int countStrings(vector<std::string>& texts, bool (*myMatchFunc)(std::string test)) 
 {
-    cout << "a: " << a << endl;
+    int count = 0;
+    for (vector<std::string>::iterator it = texts.begin(); it != texts.end(); it++) {
+        if (myMatchFunc(*it)) {
+            count++;
+        }
+    }
+
+    return count;
 }
 
 int main()
 {
-    // Declare a function pointer, and point it to the test function
-    void (*fPtr)();
-    fPtr = test;
+    vector<std::string> texts;
+    texts.push_back("one");
+    texts.push_back("two");
+    texts.push_back("three");
+    texts.push_back("four");
+    texts.push_back("five");
+    texts.push_back("size");
+    texts.push_back("seven");
 
-    // Now we can call the test() function via the function pointer
-    fPtr();
+    // Now we can search the vector and find the number of strings with three chars
+    int number = std::count_if(texts.begin(), texts.end(), match);
+    cout << "Number: " << number << endl; 
 
-    // Or we can also dereference the function pointer and use that to call the function
-    (*fPtr)();
-
-    // We can have function pointers to functions that take parameters as well 
-    void (*fPtr2)(int) = test2;
-    fPtr2(10);
+    // Use our version 
+    cout << "Count of strings: " << countStrings(texts, match) << endl;
 
     return 0;
 }
