@@ -16,15 +16,22 @@ int main()
     myBuffer.add(40);
     myBuffer.add(50);
     
-    myBuffer.print();
+    for (int i = 0; i < myBuffer.size(); i++) {
+        cout << myBuffer.get(i) << endl;
+    }
     cout << endl;
 
     myBuffer.add(60);
     myBuffer.add(70);
-    myBuffer.print();
 
-    ring<int>::iterator it;
-    it.print();
+    for (ring<int>::iterator it = myBuffer.begin(); it != myBuffer.end(); ++it) {
+        cout << *it << endl;
+    }
+    cout << endl;
+
+    for (auto v : myBuffer) {
+        cout << v << endl;
+    }
 
     return 0;
 }
