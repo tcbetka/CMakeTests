@@ -5,25 +5,26 @@ using std::endl;
 #include <vector>
 using std::vector;
 
+#include "ring.h"
 
 int main()
 {
-    const char* texts[] = { "one", "two", "three" };
+    ring<int> myBuffer(5);
+    myBuffer.add(10);
+    myBuffer.add(20);
+    myBuffer.add(30);
+    myBuffer.add(40);
+    myBuffer.add(50);
+    
+    myBuffer.print();
+    cout << endl;
 
-    // Enhanced for loop 
-    for (auto text: texts) {
-        cout << text << endl;
-    }
+    myBuffer.add(60);
+    myBuffer.add(70);
+    myBuffer.print();
 
-    vector<int> numbers{ 5, 7, 9, 11 };
-    for (auto n : numbers) {
-        cout << n << endl;
-    }
-
-    std::string hello = "Hello World";
-    for (auto c : hello) {
-        cout << c << endl;
-    }
+    ring<int>::iterator it;
+    it.print();
 
     return 0;
 }
