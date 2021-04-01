@@ -13,18 +13,18 @@ class Test
 {
 private:
     static constexpr int SIZE = 100;
-    int *mBuffer;
+    int* mBuffer{nullptr};
 
 public:
     Test()
     {
-        cout << "Constructor" << endl;
+        //cout << "Constructor" << endl;
         mBuffer = new int[SIZE]{0};
     }
 
     Test(int i)
     {
-        cout << "Parameterized constructor" << endl;
+        //cout << "Parameterized constructor" << endl;
         for (int i = 0; i < SIZE; i++)
         {
             mBuffer[i] = 7 * i;
@@ -33,15 +33,46 @@ public:
 
     Test(const Test &other)
     {
-        cout << "Copy constructor" << endl;
+        //cout << "Copy constructor" << endl;
 
         mBuffer = new int[SIZE];
         memcpy(mBuffer, other.mBuffer, SIZE * sizeof(int));
     }
 
+    // Move constructor -- allows us to simply steal resources from the object passed in
+    Test(Test&& other) {
+        cout << "Move constructor" << endl;
+
+        // Check first for self-assignment
+        if (this->mBuffer != other.mBuffer) {
+            mBuffer = other.mBuffer;
+        }
+
+        // Reset the object stolen from, then delete it
+        other.mBuffer = nullptr;
+        delete [] other.mBuffer;
+    }
+
+    // Move assignment operator 
+    Test& operator=(Test&& other) {
+        cout << "Move assignment" << endl;
+
+        // Check first for self-assignment 
+        if (this->mBuffer != other.mBuffer) {
+            // Make sure our current object doesn't have any resources
+            delete [] mBuffer;
+
+            // Now assign from the other object, and then set it to null to avoid repeated deletions
+            mBuffer = other.mBuffer;
+            other.mBuffer = nullptr;
+        }
+
+        return *this;
+    }
+
     Test &operator=(const Test &other)
     {
-        cout << "Assignment" << endl;
+        //cout << "Assignment" << endl;
 
         mBuffer = new int[SIZE];
         memcpy(mBuffer, other.mBuffer, SIZE * sizeof(int));
@@ -52,7 +83,9 @@ public:
     ~Test()
     {
         cout << "Destructor" << endl;
-        delete[] mBuffer;
+        if (mBuffer) {
+            delete[] mBuffer;
+        }
     }
 
     friend ostream& operator<<(ostream& out, const Test& other);
@@ -69,25 +102,18 @@ Test getTest()
     return Test();
 }
 
+
 int main()
 {
-    Test test1 = getTest();
-    cout << test1 << endl;
-
     vector<Test> vec;
+
+    // This is inefficient unless copy elision is turned on in the compiler settings, or we
+    //  use move semantics
     vec.push_back(Test());
 
-    // lvalue reference, as we can take the address of test1
-    Test* pTest1 = &test1;
-    Test& rTest1 = test1;
+    Test test;
+    test = getTest();
 
-    // This won't work though, as getTest() is an rvalue 
-    //Test& test2 = getTest();
-
-    // But you CAN do it, if test2 is marked const--because it forces the lifetime of the rvalue
-    //  gets pushed out to that of the const reference. This is no different than a copy ctor
-    //  taking a const Test& parameter to an rvalue, which has the lifetime of the copy ctor.
-    const Test& test2 = getTest();
 
     return 0;
 }
