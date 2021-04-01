@@ -5,82 +5,54 @@ using std::endl;
 #include <vector>
 using std::vector;
 
-class Test 
+#include <functional>
+using std::function;
+
+#include <algorithm>
+using std::count_if;
+
+bool check(const std::string &test)
 {
-private: 
-    // Can use either syntax in c++11
-    int one{1};
-    int two = 2;
+    return test.size() == 3;
+}
 
+class Check
+{
 public:
-    void run() {
-        int three = 3;
-        int four = 4;
-
-        // Use the 'this' keyword to capture the instance variables by REF
-        auto pLambda = [this, three, four]() {
-            one = 111;
-            two = -250;
-            cout << one << endl;
-            cout << two << endl;
-            cout << three << endl;
-            cout << four << endl;
-        };
-        pLambda();
+    bool operator()(const std::string &test)
+    {
+        return test.size() == 5;
     }
 };
 
-void test(void (*pFunc)()) 
+void run(function<bool(std::string)> check) 
 {
-    pFunc();
+    std::string test = "dog";
+    cout << "check(test): " << check(test) << endl;
 }
 
 int main()
 {
-    // Basic syntax of a lambda function -- which can be called using the last () 
-    auto func = [](){ cout << "Hello World" << endl; };
-    
-    // We can pass a lambda just as if it were a function pointer
-    //test(func);
+    vector<std::string> vec{"one", "two", "three"};
 
-    // We can also simply define the function right in-place, in a function argument list
-    test( [](){ cout << "Hello World" << endl; } );
+    auto lambda = [](std::string str) { return str.size() == 3; };
 
-    // Our lambda expresion/function can take args 
-    auto pGreet = [](std::string name) { cout << "Hello " << name << endl; };
-    pGreet("Mike");
+    // Count the number of strings in the vector that have three characters. Our third argument is
+    //  a lambda that simply takes in each string from the vector, and returns whether or not it has 3 chars
+    int count = count_if(vec.begin(), vec.end(), lambda);
+    cout << "Count1 = " << count << endl;
 
-    // It can have a return type, using the trailing return type syntax. If the compiler 
-    //  can infer the return type then we don't need to include it. 
-    auto pDivide = [](double a, double b) -> double {
-        if (b != 0.0) {
-            return a / b;
-        } else  {
-            return 0.0;
-        }
-    };
+    // Recall that we can do the same thing using an ordinary function pointer
+    count = count_if(vec.begin(), vec.end(), check);
+    cout << "Count2 = " << count << endl;
 
-    // We can have lambdas capture values both by value, and by reference
-    int x = 10;
-    int y = 5;
+    // We can also do the same thing using a functor as our final argument
+    Check c1;
+    count = count_if(vec.begin(), vec.end(), c1);
+    cout << "Count2 = " << count << endl;
 
-    // Capture all local vars by value
-    auto pMulti = [=] () {
-        cout << "10 * 5 = " << x * y << endl; 
-    };
-    pMulti();
-
-    // Can capture some by value and some by reference as well (x by ref, y by value)
-    auto pMulti2 = [y, &x]() {
-        x++;
-        cout << x << " * " << y << " = " << x * y << endl;
-    };
-    pMulti2();
-
-    // Can also capture 'this' with a lambda 
-    Test test;
-    test.run();
-
+    // We can use our functional object as well
+    run(lambda);
 
     return 0;
 }
