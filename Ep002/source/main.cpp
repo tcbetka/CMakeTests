@@ -81,6 +81,15 @@ int main()
     Test test;
     test.run();
 
+    // Mutable lambda example
+    int cats = 5;
+    // capture cats by value, so we cannot change it inside the lambda
+    [cats] () { cout << "cats: " << cats << endl; }();
+
+    // Using the mutable keyword allows us to change the captured var(s), but only in the lambda.
+    //  So it will still be '5' here...
+    [cats] () mutable { cats++; cout << "mutable cats: " << cats << endl; }();
+    cout << "cats after mutable lambda: " << cats << endl;
 
     return 0;
 }
