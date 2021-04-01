@@ -1,95 +1,93 @@
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::ostream;
 
 #include <vector>
 using std::vector;
 
-class Test 
+#include <cstring>
+using std::memcpy;
+
+class Test
 {
-private: 
-    // Can use either syntax in c++11
-    int one{1};
-    int two = 2;
+private:
+    static constexpr int SIZE = 100;
+    int *mBuffer;
 
 public:
-    void run() {
-        int three = 3;
-        int four = 4;
-
-        // Use the 'this' keyword to capture the instance variables by REF
-        auto pLambda = [this, three, four]() {
-            one = 111;
-            two = -250;
-            cout << one << endl;
-            cout << two << endl;
-            cout << three << endl;
-            cout << four << endl;
-        };
-        pLambda();
+    Test()
+    {
+        cout << "Constructor" << endl;
+        mBuffer = new int[SIZE]{0};
     }
+
+    Test(int i)
+    {
+        cout << "Parameterized constructor" << endl;
+        for (int i = 0; i < SIZE; i++)
+        {
+            mBuffer[i] = 7 * i;
+        }
+    }
+
+    Test(const Test &other)
+    {
+        cout << "Copy constructor" << endl;
+
+        mBuffer = new int[SIZE];
+        memcpy(mBuffer, other.mBuffer, SIZE * sizeof(int));
+    }
+
+    Test &operator=(const Test &other)
+    {
+        cout << "Assignment" << endl;
+
+        mBuffer = new int[SIZE];
+        memcpy(mBuffer, other.mBuffer, SIZE * sizeof(int));
+
+        return *this;
+    }
+
+    ~Test()
+    {
+        cout << "Destructor" << endl;
+        delete[] mBuffer;
+    }
+
+    friend ostream& operator<<(ostream& out, const Test& other);
 };
 
-void test(void (*pFunc)()) 
+ostream& operator<<(ostream& out, const Test& other)
 {
-    pFunc();
+    out << "Hello from test";
+    return out;
+}
+
+Test getTest()
+{
+    return Test();
 }
 
 int main()
 {
-    // Basic syntax of a lambda function -- which can be called using the last () 
-    auto func = [](){ cout << "Hello World" << endl; };
-    
-    // We can pass a lambda just as if it were a function pointer
-    //test(func);
+    Test test1 = getTest();
+    cout << test1 << endl;
 
-    // We can also simply define the function right in-place, in a function argument list
-    test( [](){ cout << "Hello World" << endl; } );
+    vector<Test> vec;
+    vec.push_back(Test());
 
-    // Our lambda expresion/function can take args 
-    auto pGreet = [](std::string name) { cout << "Hello " << name << endl; };
-    pGreet("Mike");
+    // lvalue reference, as we can take the address of test1
+    Test* pTest1 = &test1;
+    Test& rTest1 = test1;
 
-    // It can have a return type, using the trailing return type syntax. If the compiler 
-    //  can infer the return type then we don't need to include it. 
-    auto pDivide = [](double a, double b) -> double {
-        if (b != 0.0) {
-            return a / b;
-        } else  {
-            return 0.0;
-        }
-    };
+    // This won't work though, as getTest() is an rvalue 
+    //Test& test2 = getTest();
 
-    // We can have lambdas capture values both by value, and by reference
-    int x = 10;
-    int y = 5;
-
-    // Capture all local vars by value
-    auto pMulti = [=] () {
-        cout << "10 * 5 = " << x * y << endl; 
-    };
-    pMulti();
-
-    // Can capture some by value and some by reference as well (x by ref, y by value)
-    auto pMulti2 = [y, &x]() {
-        x++;
-        cout << x << " * " << y << " = " << x * y << endl;
-    };
-    pMulti2();
-
-    // Can also capture 'this' with a lambda 
-    Test test;
-    test.run();
-
-    // Mutable lambda example
-    int cats = 5;
-    // capture cats by value, so we cannot change it inside the lambda
-    [cats] () { cout << "cats: " << cats << endl; }();
-
-    // Using the mutable keyword allows us to change the captured var(s), but only in the lambda.
-    //  So it will still be '5' here...
-    [cats] () mutable { cats++; cout << "mutable cats: " << cats << endl; }();
-    cout << "cats after mutable lambda: " << cats << endl;
+    // But you CAN do it, if test2 is marked const--because it forces the lifetime of the rvalue
+    //  gets pushed out to that of the const reference. This is no different than a copy ctor
+    //  taking a const Test& parameter to an rvalue, which has the lifetime of the copy ctor.
+    const Test& test2 = getTest();
 
     return 0;
 }
