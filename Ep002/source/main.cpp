@@ -6,49 +6,27 @@ using std::ostream;
 #include <vector>
 using std::vector;
 
-#include <cstring>
-using std::memcpy;
+#include <functional>
+using std::bind;
 
-class Test
-{
 
-};
-
-// The argument to call could be an rvalue or an lvalue, based upon the reference-collapsing
-//  rules as seen in main
-template <typename T>
-void call(T&& arg) {
-    // Since 'arg' is an lvalue in the context of this function (ie; we can take its address),
-    //  we need to cast arg to type T in order to correctly capture whether or not it was an
-    //  rvalue or an lvalue that gets passed in as an argument. This is "perfect forwarding"
-    check(static_cast<T>(arg));
-
-    // We can use std::forward to make this process more explicit
-    check(std::forward<T>(arg));
-}
-
-void check(Test& test) {
-    cout << "lvalue" << endl;
-}
-
-void check(Test&& test) {
-    cout << "rvalue" << endl;
+int add(int a, int b, int c) {
+    cout << a << " + " << b << " + " << c << " = "; 
+    return a + b + c;
 }
 
 int main()
 {
-    // rvalue reference is OK
-    auto&& t1 = Test();
+    cout << add(1, 2, 3) << endl;
 
-    // Can't point an rvalue reference at a non-const lvalue
-    Test test;
-    //Test&& t2 = test; // ERROR
+    // std::bind allows you to declare aliases to functions 
+    auto calc1 = bind(add, 3, 4, 5);
+    cout << calc1() << endl;
 
-    // However when we use 'auto,' the reference-collapsing rules allow this
-    auto&& t3 = test;
+    // now we can also add placeholders and then supply arguments
+    auto calc2 = bind(add, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    cout << calc2(10, 20, 30) << endl;
 
-    call(Test());
-    call(test);
 
     return 0;
 }
