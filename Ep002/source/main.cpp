@@ -17,10 +17,20 @@ using std::make_shared;
 int main()
 {
     std::string fileName = "test.bmp";
+    const int WIDTH = 800;
+    const int HEIGHT = 600;
 
-    Bitmap bitmap(800, 600);
+    Bitmap bitmap(WIDTH, HEIGHT);
+    //bitmap.setPixel(WIDTH/2, HEIGHT/2, 255, 255, 255);
+
+    for (int y = 0; y < HEIGHT; y++) {
+        for (int x = 0; x < WIDTH; x++) {
+            bitmap.setPixel(x, y, 255, 255, 255);
+        }
+    }
+
     bitmap.write(fileName);
 
-    cout << "Finished" << endl; 
+    cout << "Finished" << endl;
     return 0;
 }
