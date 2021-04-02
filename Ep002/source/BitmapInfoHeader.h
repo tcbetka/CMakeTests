@@ -4,10 +4,6 @@
 #include <cstdint>
 using std::int32_t;
 
-// Make C++ align the struct on 2-byte boundaries, otherwise the file will be 
-//  unreadable to our program
-#pragma pack(2)
-
 // This header follows the BitmapFileHeader in our bitmap file. 
 struct BitmapInfoHeader
 {
@@ -23,5 +19,6 @@ struct BitmapInfoHeader
     int32_t colors{0};
     int32_t importantColors{0};
 };
+
 
 #endif

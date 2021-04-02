@@ -11,13 +11,16 @@ using std::unique_ptr;
 using std::shared_ptr;
 using std::make_shared;
 
-#include "BitmapFileHeader.h"
-#include "BitmapInfoHeader.h"
 #include "Bitmap.h"
 
 
 int main()
 {
+    std::string fileName = "test.bmp";
 
+    Bitmap bitmap(800, 600);
+    bitmap.write(fileName);
+
+    cout << "Finished" << endl; 
     return 0;
 }

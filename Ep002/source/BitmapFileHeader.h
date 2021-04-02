@@ -6,7 +6,7 @@ using std::int32_t;
 
 // Make C++ align the struct on 2-byte boundaries, otherwise the file will be 
 //  unreadable to our program
-#pragma pack(2)
+#pragma pack(push, 2)
 struct BitmapFileHeader
 {
     // Tell the compiler this is a bitmap file with a 2-byte header
@@ -17,6 +17,6 @@ struct BitmapFileHeader
     int32_t reserved{0};
     int32_t dataOffset;
 };
-
+#pragma pack(pop)
 
 #endif
