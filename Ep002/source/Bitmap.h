@@ -7,11 +7,15 @@ using std::string;
 #include <cstdint>
 using std::uint8_t;
 
+#include <memory>
+using std::unique_ptr;
+
 class Bitmap
 {
 private:
     int mWidth{0};
     int mHeight{0};
+    unique_ptr<uint8_t[]> mPixels{nullptr};
 
 public:
     Bitmap(int width, int height);
