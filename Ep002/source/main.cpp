@@ -13,6 +13,7 @@ using std::make_shared;
 
 #include "BitmapFileHeader.h"
 #include "BitmapInfoHeader.h"
+#include "Bitmap.h"
 
 
 int main()
