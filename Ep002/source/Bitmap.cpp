@@ -45,7 +45,7 @@ bool Bitmap::write(string filename)
     // Write our file header first
     outFile.write((char*)&fileHeader, sizeof(fileHeader));
     outFile.write((char*)&infoHeader, sizeof(infoHeader));
-    outFile.write((char*)mPixels.get(), sizeof(mWidth * mHeight * 3));
+    outFile.write((char*)mPixels.get(), mWidth * mHeight * 3);
 
     outFile.close();
     return true;
