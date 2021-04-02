@@ -11,109 +11,44 @@ using std::memcpy;
 
 class Test
 {
-private:
-    static constexpr int SIZE = 100;
-    int* mBuffer{nullptr};
 
-public:
-    Test()
-    {
-        //cout << "Constructor" << endl;
-        mBuffer = new int[SIZE]{0};
-    }
-
-    Test(int i)
-    {
-        //cout << "Parameterized constructor" << endl;
-        for (int i = 0; i < SIZE; i++)
-        {
-            mBuffer[i] = 7 * i;
-        }
-    }
-
-    Test(const Test &other)
-    {
-        //cout << "Copy constructor" << endl;
-
-        mBuffer = new int[SIZE];
-        memcpy(mBuffer, other.mBuffer, SIZE * sizeof(int));
-    }
-
-    // Move constructor -- allows us to simply steal resources from the object passed in
-    Test(Test&& other) {
-        cout << "Move constructor" << endl;
-
-        // Check first for self-assignment
-        if (this->mBuffer != other.mBuffer) {
-            mBuffer = other.mBuffer;
-        }
-
-        // Reset the object stolen from, then delete it
-        other.mBuffer = nullptr;
-        delete [] other.mBuffer;
-    }
-
-    // Move assignment operator 
-    Test& operator=(Test&& other) {
-        cout << "Move assignment" << endl;
-
-        // Check first for self-assignment 
-        if (this->mBuffer != other.mBuffer) {
-            // Make sure our current object doesn't have any resources
-            delete [] mBuffer;
-
-            // Now assign from the other object, and then set it to null to avoid repeated deletions
-            mBuffer = other.mBuffer;
-            other.mBuffer = nullptr;
-        }
-
-        return *this;
-    }
-
-    Test &operator=(const Test &other)
-    {
-        //cout << "Assignment" << endl;
-
-        mBuffer = new int[SIZE];
-        memcpy(mBuffer, other.mBuffer, SIZE * sizeof(int));
-
-        return *this;
-    }
-
-    ~Test()
-    {
-        cout << "Destructor" << endl;
-        if (mBuffer) {
-            delete[] mBuffer;
-        }
-    }
-
-    friend ostream& operator<<(ostream& out, const Test& other);
 };
 
-ostream& operator<<(ostream& out, const Test& other)
-{
-    out << "Hello from test";
-    return out;
+// The argument to call could be an rvalue or an lvalue, based upon the reference-collapsing
+//  rules as seen in main
+template <typename T>
+void call(T&& arg) {
+    // Since 'arg' is an lvalue in the context of this function (ie; we can take its address),
+    //  we need to cast arg to type T in order to correctly capture whether or not it was an
+    //  rvalue or an lvalue that gets passed in as an argument. This is "perfect forwarding"
+    check(static_cast<T>(arg));
+
+    // We can use std::forward to make this process more explicit
+    check(std::forward<T>(arg));
 }
 
-Test getTest()
-{
-    return Test();
+void check(Test& test) {
+    cout << "lvalue" << endl;
 }
 
+void check(Test&& test) {
+    cout << "rvalue" << endl;
+}
 
 int main()
 {
-    vector<Test> vec;
+    // rvalue reference is OK
+    auto&& t1 = Test();
 
-    // This is inefficient unless copy elision is turned on in the compiler settings, or we
-    //  use move semantics
-    vec.push_back(Test());
-
+    // Can't point an rvalue reference at a non-const lvalue
     Test test;
-    test = getTest();
+    //Test&& t2 = test; // ERROR
 
+    // However when we use 'auto,' the reference-collapsing rules allow this
+    auto&& t3 = test;
+
+    call(Test());
+    call(test);
 
     return 0;
 }
