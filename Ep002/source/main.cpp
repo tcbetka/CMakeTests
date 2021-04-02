@@ -6,27 +6,73 @@ using std::ostream;
 #include <vector>
 using std::vector;
 
-#include <functional>
-using std::bind;
+#include <memory>
+using std::unique_ptr;
+using std::shared_ptr;
 
+class Test
+{
+public:
+    Test() { cout << "created" << endl; }
+    void greet() { cout << "hello" << endl; }
+    ~Test() { cout << "destroyed" << endl; }
+};
 
-int add(int a, int b, int c) {
-    cout << a << " + " << b << " + " << c << " = "; 
-    return a + b + c;
-}
+class Temp
+{
+public:
+    // We can have an instance variable of type unique_ptr, we simply
+    //  need to initialize it in the ctor like we do with any other
+    //  variable
+    unique_ptr<Test[]> pTest;
+
+    // Or we can use an initialization list since C++11
+    unique_ptr<Test[]> pTest2{new Test[2]};
+
+public:
+    Temp() : pTest(new Test[2]) {}
+};
 
 int main()
 {
-    cout << add(1, 2, 3) << endl;
+    // Use { } to establish a scope    
+    {
+        /*
+        // Create a unique_ptr as the only thing pointing at an object. This will deallocate
+        //  memory automatically when the unique_ptr goes out of scope. Note: This is very
+        //  similar to the pre-c++11 "auto_ptr" that has now been deprecated. 
+        unique_ptr<Test> pTest(new Test);
 
-    // std::bind allows you to declare aliases to functions 
-    auto calc1 = bind(add, 3, 4, 5);
-    cout << calc1() << endl;
+        // Now use the unique_ptr just like a regular pointer
+        pTest->greet();
+        */
+    }
+    cout << endl << endl;
 
-    // now we can also add placeholders and then supply arguments
-    auto calc2 = bind(add, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-    cout << calc2(10, 20, 30) << endl;
+    {
+        /*
+        // We can also use a unique_ptr on arrays too
+        unique_ptr<Test[]> pTest(new Test[2]);
+
+        // Now we have two Test objects to call methods on, and both will be destroyed when the 
+        //  unique_ptr goes out of scope. 
+        pTest[0].greet();
+        pTest[1].greet(); 
+        */
+    }
+
+    // Test our Temp class objects
+    {
+        Temp temp1;
+        //temp1.pTest[0]->greet();
+        temp1.pTest[0].greet();
+        temp1.pTest[1].greet();
+        cout << endl;
+        temp1.pTest2[0].greet();
+        temp1.pTest2[1].greet();
+    }
 
 
+    cout << "\nFinished" << endl;
     return 0;
 }
