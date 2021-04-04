@@ -13,6 +13,9 @@ using std::unique_ptr;
 #include <cstdint>
 using std::uint8_t;
 
+#include <cmath>
+using std::pow;
+
 #include "Bitmap.h"
 #include "Mandlebrot.h"
 
@@ -64,16 +67,20 @@ int main()
 
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
-            int iterations = fractal[y * WIDTH + x];
-
-            double hue = 0.0;
-            for (int i = 0; i <= iterations; i++) {
-                hue += static_cast<double>(histogram[i]) / total;
-            }
 
             uint8_t red = 0;
-            uint8_t green = hue * 255;
+            uint8_t green = 0;
             uint8_t blue = 0;
+
+            int iterations = fractal[y * WIDTH + x];
+            if (iterations != Mandlebrot::MAX_ITERATIONS) 
+            {
+                double hue = 0.0;
+                for (int i = 0; i <= iterations; i++) {
+                    hue += static_cast<double>(histogram[i]) / total;
+                }
+                green = pow(255, hue);
+            }
 
             bitmap.setPixel(x, y, red, green, blue);
         }
