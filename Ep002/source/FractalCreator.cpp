@@ -110,30 +110,38 @@ void FractalCreator::calculateTotalIterations()
 
 void FractalCreator::drawFractal()
 {
-    RGB startColor(0, 0, 0);
-    RGB endColor(0, 0, 255);
-    RGB colorDiff = endColor - startColor;
-
     for (int y = 0; y < mHeight; y++) 
     {
         for (int x = 0; x < mWidth; x++) 
         {
+            int iterations = mFractal[y * mWidth + x];
+            int range = getRange(iterations);
+            int rangeTotal = mRangeTotals[range];
+            int rangeStart = mRanges[range];
+
+            RGB& startColor = mColors[range];
+            RGB& endColor = mColors[range+1];
+            RGB colorDiff = endColor - startColor;
 
             uint8_t red = 0;
             uint8_t green = 0;
             uint8_t blue = 0;
 
-            int iterations = mFractal[y * mWidth + x];
+            
             if (iterations != Mandlebrot::MAX_ITERATIONS) 
             {
-                double hue = 0.0;
-                for (int i = 0; i <= iterations; i++) {
-                    hue += static_cast<double>(mHistogram[i]) / mTotalIterations;
+                int totalPixels = 0;
+
+                for (int i = rangeStart; i <= iterations; i++) {
+                    totalPixels += mHistogram[i];
                 }
                 
-                red = startColor.mRed + colorDiff.mRed * hue;
-                green = startColor.mGreen  + colorDiff.mGreen * hue;
-                blue = startColor.mBlue + colorDiff.mBlue * hue;
+                red = startColor.mRed + 
+                    (colorDiff.mRed * static_cast<double>(totalPixels) / rangeTotal);
+                green = startColor.mGreen  + 
+                    (colorDiff.mGreen * static_cast<double>(totalPixels) / rangeTotal);
+                blue = startColor.mBlue + 
+                    `(colorDiff.mBlue * static_cast<double>(totalPixels) / rangeTotal);
             }
 
             mBitmap.setPixel(x, y, red, green, blue);

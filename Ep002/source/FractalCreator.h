@@ -23,7 +23,6 @@ public:
     void run(string name);
     void addZoom(const Zoom &zoom);
     void addRange(double rangeEnd, const RGB& rgb);
-    int getRange(int iterations) const;
 
 private:
     void calculateIteration();
@@ -31,7 +30,8 @@ private:
     void drawFractal();
     void writeBitmap(string name);
     void calculateRangeTotals();
-    
+    int getRange(int iterations) const;
+
 private:
     int mWidth{0};
     int mHeight{0};

@@ -18,8 +18,6 @@ int main()
     fractalCreator.addRange(0.5, RGB(255, 255, 0));
     fractalCreator.addRange(1.0, RGB(255, 255, 255));    
 
-    cout << "Range: " << fractalCreator.getRange(999) << endl; 
-
     fractalCreator.addZoom(Zoom(295, 202, 0.1));
     fractalCreator.addZoom(Zoom(312, 304, 0.1));
 
