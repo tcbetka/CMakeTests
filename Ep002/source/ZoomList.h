@@ -13,6 +13,9 @@ using std::pair;
 class ZoomList
 {
 private:
+    double mXcenter{0.0};
+    double mYcenter{0.0};
+    double mScale{1.0};
     int mWidth{0};
     int mHeight{0};
     vector<Zoom> zooms;

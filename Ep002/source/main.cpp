@@ -16,8 +16,12 @@ using std::uint8_t;
 #include <cmath>
 using std::pow;
 
+#include <utility>
+using std::pair;
+
 #include "Bitmap.h"
 #include "Mandlebrot.h"
+#include "Zoom.h"
 #include "ZoomList.h"
 
 
@@ -35,12 +39,13 @@ int main()
     unique_ptr<int[]> histogram(new int[Mandlebrot::MAX_ITERATIONS]{0});
     unique_ptr<int[]> fractal(new int[WIDTH * HEIGHT]{0});
 
+    ZoomList zoomList(WIDTH, HEIGHT);
+    zoomList.add(Zoom(WIDTH/2, HEIGHT/2, 4.0/WIDTH));
+
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
-            double xFractal = (x - WIDTH/2 - 200) * (2.0/HEIGHT);    // shift to the right a little using "- 200"
-            double yFractal = (y - HEIGHT/2) * (2.0/HEIGHT);
-
-            int iterations = Mandlebrot::getIterations(xFractal, yFractal);
+            pair<double, double> fractalCoords = zoomList.doZoom(x, y);
+            int iterations = Mandlebrot::getIterations(fractalCoords.first, fractalCoords.second);
 
             fractal[y*WIDTH + x] = iterations;
 
