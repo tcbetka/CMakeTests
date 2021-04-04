@@ -28,7 +28,7 @@ int main()
     double min{999999};
     double max{-999999};
 
-    unique_ptr<int[]> histogram(new int[Mandlebrot::MAX_ITERATIONS + 1]{0});
+    unique_ptr<int[]> histogram(new int[Mandlebrot::MAX_ITERATIONS]{0});
 
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
@@ -36,8 +36,10 @@ int main()
             double yFractal = (y - HEIGHT/2) * (2.0/HEIGHT);
 
             int iterations = Mandlebrot::getIterations(xFractal, yFractal);
-            histogram[iterations]++;
-
+            if (iterations != Mandlebrot::MAX_ITERATIONS) {
+                histogram[iterations]++;
+            }
+    
             uint8_t color = static_cast<uint8_t>(256 * static_cast<double>(iterations) / Mandlebrot::MAX_ITERATIONS);
             color = color * color * color;
             bitmap.setPixel(x, y, 0, color, 0);
