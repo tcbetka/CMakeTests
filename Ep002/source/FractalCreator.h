@@ -23,6 +23,7 @@ public:
     void run(string name);
     void addZoom(const Zoom &zoom);
     void addRange(double rangeEnd, const RGB& rgb);
+    int getRange(int iterations) const;
 
 private:
     void calculateIteration();

@@ -8,6 +8,8 @@ using std::vector;
 using std::cout;
 using std::endl;
 
+#include <cassert>
+
 #include "FractalCreator.h"
 
 FractalCreator::FractalCreator(int width, int height) :
@@ -18,7 +20,7 @@ FractalCreator::FractalCreator(int width, int height) :
     mBitmap(mWidth, mHeight),
     mZoomList(mWidth, mHeight)
 {
-    addZoom(Zoom(mWidth/2, mHeight/2, 4.0/mWidth));
+    mZoomList.add(Zoom(mWidth/2, mHeight/2, 4.0/mWidth));
 }
 
 void FractalCreator::run(string name)
@@ -46,6 +48,27 @@ void FractalCreator::addRange(double rangeEnd, const RGB& rgb)
     mGotFirstRange = true; 
 }
 
+int FractalCreator::getRange(int iterations) const
+{
+    int range{0};
+
+    for (int i = 1; i < mRanges.size(); i++) {
+        range = i;
+
+        if (mRanges[i] > iterations) {
+            break;
+        }
+    }
+
+    // Shift back to a zero-based index
+    range--;
+
+    assert(range > -1);
+    assert(range < mRanges.size());
+
+    return range;
+}
+
 void FractalCreator::calculateIteration()
 {
     for (int y = 0; y < mHeight; y++) 
@@ -60,10 +83,6 @@ void FractalCreator::calculateIteration()
             if (iterations != Mandlebrot::MAX_ITERATIONS) {
                 mHistogram[iterations]++;
             }
-    
-            uint8_t color = static_cast<uint8_t>(256 * static_cast<double>(iterations) / Mandlebrot::MAX_ITERATIONS);
-            color = color * color * color;
-            mBitmap.setPixel(x, y, 0, color, 0);
         }
     }
 }
@@ -77,12 +96,8 @@ void FractalCreator::calculateRangeTotals()
         if (i >= mRanges[rangeIndex + 1]) {
             rangeIndex++;
         }
-        
-        mRangeTotals[rangeIndex] += pixels;
-    }
 
-    for (int value : mRangeTotals) {
-        cout << "Range total: " << value << endl;
+        mRangeTotals[rangeIndex] += pixels;
     }
 }
 
