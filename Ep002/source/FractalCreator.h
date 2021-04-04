@@ -22,13 +22,15 @@ public:
     FractalCreator(int width, int height);
     void run(string name);
     void addZoom(const Zoom &zoom);
+    void addRange(double rangeEnd, const RGB& rgb);
 
 private:
     void calculateIteration();
     void calculateTotalIterations();
     void drawFractal();
     void writeBitmap(string name);
-
+    void calculateRangeTotals();
+    
 private:
     int mWidth{0};
     int mHeight{0};
@@ -37,6 +39,10 @@ private:
     Bitmap mBitmap;
     ZoomList mZoomList;
     int mTotalIterations{0};
+    vector<double> mRanges{0.0};
+    vector<RGB> mColors;
+    vector<int> mRangeTotals{0};
+    bool mGotFirstRange{false};
 };
 
 #endif // FRACTAL_CREATOR_h

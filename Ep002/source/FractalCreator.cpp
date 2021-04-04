@@ -1,6 +1,13 @@
 #include <utility>
 using std::pair;
 
+#include <vector>
+using std::vector;
+
+#include <iostream>
+using std::cout;
+using std::endl;
+
 #include "FractalCreator.h"
 
 FractalCreator::FractalCreator(int width, int height) :
@@ -18,8 +25,25 @@ void FractalCreator::run(string name)
 {
     calculateIteration();
     calculateTotalIterations();
+    calculateRangeTotals();
     drawFractal();
     writeBitmap(name);   
+}
+
+void FractalCreator::addZoom(const Zoom& zoom)
+{
+    mZoomList.add(zoom);
+}
+
+void FractalCreator::addRange(double rangeEnd, const RGB& rgb)
+{
+    mRanges.push_back(rangeEnd * Mandlebrot::MAX_ITERATIONS);
+    mColors.push_back(rgb);
+
+    if (mGotFirstRange) {
+        mRangeTotals.push_back(0);
+    }
+    mGotFirstRange = true; 
 }
 
 void FractalCreator::calculateIteration()
@@ -44,18 +68,35 @@ void FractalCreator::calculateIteration()
     }
 }
 
+void FractalCreator::calculateRangeTotals()
+{
+    int rangeIndex = 0;
+    for (int i = 0; i < Mandlebrot::MAX_ITERATIONS; i++) {
+        int pixels = mHistogram[i];
+
+        if (i >= mRanges[rangeIndex + 1]) {
+            rangeIndex++;
+        }
+        
+        mRangeTotals[rangeIndex] += pixels;
+    }
+
+    for (int value : mRangeTotals) {
+        cout << "Range total: " << value << endl;
+    }
+}
+
 void FractalCreator::calculateTotalIterations()
 {
-    for (int i = 0; i < Mandlebrot::MAX_ITERATIONS; i++) 
-    {
+    for (int i = 0; i < Mandlebrot::MAX_ITERATIONS; i++) {
         mTotalIterations += mHistogram[i];
     }   
 }
 
 void FractalCreator::drawFractal()
 {
-    RGB startColor(0, 0, 20);
-    RGB endColor(255, 128, 64);
+    RGB startColor(0, 0, 0);
+    RGB endColor(0, 0, 255);
     RGB colorDiff = endColor - startColor;
 
     for (int y = 0; y < mHeight; y++) 
@@ -84,12 +125,7 @@ void FractalCreator::drawFractal()
         }
     }
 }
-
-void FractalCreator::addZoom(const Zoom& zoom)
-{
-    mZoomList.add(zoom);
-}
-    
+   
 void FractalCreator::writeBitmap(string name)
 {
     mBitmap.write(name);
