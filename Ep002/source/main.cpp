@@ -56,6 +56,29 @@ int main()
             }
          }
     }
+
+    int total{0};
+    for (int i = 0; i < Mandlebrot::MAX_ITERATIONS; i++) {
+        total += histogram[i];
+    }
+
+    for (int y = 0; y < HEIGHT; y++) {
+        for (int x = 0; x < WIDTH; x++) {
+            int iterations = fractal[y * WIDTH + x];
+
+            double hue = 0.0;
+            for (int i = 0; i <= iterations; i++) {
+                hue += static_cast<double>(histogram[i]) / total;
+            }
+
+            uint8_t red = 0;
+            uint8_t green = hue * 255;
+            uint8_t blue = 0;
+
+            bitmap.setPixel(x, y, red, green, blue);
+        }
+    }
+
     bitmap.write(fileName);
 
     cout << "Finished" << endl;
