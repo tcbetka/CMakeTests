@@ -31,19 +31,20 @@ int main()
 
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
-            double xFractal = (x - WIDTH/2) * (2.0/WIDTH);
+            double xFractal = (x - WIDTH/2 - 200) * (2.0/HEIGHT);    // shift to the right a little using "- 200"
             double yFractal = (y - HEIGHT/2) * (2.0/HEIGHT);
 
             int iterations = Mandlebrot::getIterations(xFractal, yFractal);
 
-            uint8_t red = static_cast<uint8_t>(256 * static_cast<double>(iterations) / Mandlebrot::MAX_ITERATIONS);
-            bitmap.setPixel(x, y, red, red, red);
+            uint8_t color = static_cast<uint8_t>(256 * static_cast<double>(iterations) / Mandlebrot::MAX_ITERATIONS);
+            color = color * color * color;
+            bitmap.setPixel(x, y, 0, color, 0);
 
-            if (red < min) {
-                min = red;
+            if (color < min) {
+                min = color;
             }
-            if (red > max ) {
-               max = red;
+            if (color > max ) {
+               max = color;
             }
          }
     }
