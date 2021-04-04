@@ -1,4 +1,3 @@
-#include <iostream>
 #include "ZoomList.h"
 
 ZoomList::ZoomList(int width, int height) : 
@@ -16,8 +15,6 @@ void ZoomList::add(const Zoom& zoom)
     mYcenter += (zoom.mY - mHeight/2) * mScale;
 
     mScale *= zoom.mScale;
-
-    std::cout << mXcenter << ", " << mYcenter << ", " << mScale << std::endl;
 }
 
 pair<double, double> ZoomList::doZoom(int x, int y)
