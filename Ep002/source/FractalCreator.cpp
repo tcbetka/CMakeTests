@@ -148,6 +148,7 @@ void FractalCreator::drawFractal()
         }
     }
 }
+
    
 void FractalCreator::writeBitmap(string name)
 {
