@@ -11,7 +11,11 @@ using std::unique_ptr;
 using std::shared_ptr;
 using std::make_shared;
 
+#include <cstdint>
+using std::uint8_t;
+
 #include "Bitmap.h"
+#include "Mandlebrot.h"
 
 
 int main()
@@ -30,11 +34,16 @@ int main()
             double xFractal = (x - WIDTH/2) * (2.0/WIDTH);
             double yFractal = (y - HEIGHT/2) * (2.0/HEIGHT);
 
-            if (yFractal < min) {
-                min = yFractal;
+            int iterations = Mandlebrot::getIterations(xFractal, yFractal);
+
+            uint8_t red = static_cast<uint8_t>(256 * static_cast<double>(iterations) / Mandlebrot::MAX_ITERATIONS);
+            bitmap.setPixel(x, y, red, red, red);
+
+            if (red < min) {
+                min = red;
             }
-            if (yFractal > max ) {
-               max = yFractal;
+            if (red > max ) {
+               max = red;
             }
          }
     }
