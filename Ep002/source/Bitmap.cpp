@@ -14,7 +14,7 @@ Bitmap::Bitmap(int width, int height) :
     mHeight(height),
     mPixels(new uint8_t[width * height * 3]) // 3 bytes per pixel (24-bit color)
 {
-    cout << "mPixels = " << mWidth * mHeight * 3 << " bytes" << endl;
+    //cout << "mPixels = " << mWidth * mHeight * 3 << " bytes" << endl;
 }
 
 Bitmap::~Bitmap()

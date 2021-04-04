@@ -1,6 +1,7 @@
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::flush;
 using std::ostream;
 
 #include <vector>
@@ -8,8 +9,6 @@ using std::vector;
 
 #include <memory>
 using std::unique_ptr;
-using std::shared_ptr;
-using std::make_shared;
 
 #include <cstdint>
 using std::uint8_t;
@@ -29,12 +28,15 @@ int main()
     double min{999999};
     double max{-999999};
 
+    unique_ptr<int[]> histogram(new int[Mandlebrot::MAX_ITERATIONS + 1]{0});
+
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
             double xFractal = (x - WIDTH/2 - 200) * (2.0/HEIGHT);    // shift to the right a little using "- 200"
             double yFractal = (y - HEIGHT/2) * (2.0/HEIGHT);
 
             int iterations = Mandlebrot::getIterations(xFractal, yFractal);
+            histogram[iterations]++;
 
             uint8_t color = static_cast<uint8_t>(256 * static_cast<double>(iterations) / Mandlebrot::MAX_ITERATIONS);
             color = color * color * color;
@@ -48,6 +50,13 @@ int main()
             }
          }
     }
+    cout << endl;
+    int count{0};
+    for (int i = 0; i < Mandlebrot::MAX_ITERATIONS; i++) {
+        cout << histogram[i] << " " << flush;
+        count += histogram[i];
+    }
+    cout << count << "; " << WIDTH * HEIGHT << endl;
 
     cout << min << ", " << max << endl;
 

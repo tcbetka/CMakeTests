@@ -1,6 +1,6 @@
 #include "Mandlebrot.h"
 #include <complex>
-using namespace std;
+using std::complex;
 
  Mandlebrot::Mandlebrot()
  {
