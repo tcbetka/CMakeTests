@@ -12,7 +12,7 @@ void ZoomList::add(const Zoom& zoom)
     zooms.push_back(zoom);
 
     mXcenter += (zoom.mX - mWidth/2) * mScale;
-    mYcenter += (zoom.mY - mHeight/2) * mScale;
+    mYcenter += -(zoom.mY - mHeight/2) * mScale;
 
     mScale *= zoom.mScale;
 }

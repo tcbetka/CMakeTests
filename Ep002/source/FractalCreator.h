@@ -14,18 +14,19 @@ using std::uint8_t;
 #include "Bitmap.h"
 #include "ZoomList.h"
 #include "Mandlebrot.h"
+#include "RGB.h"
 
 class FractalCreator
 {
 public:
     FractalCreator(int width, int height);
     void run(string name);
+    void addZoom(const Zoom &zoom);
 
 private:
     void calculateIteration();
     void calculateTotalIterations();
     void drawFractal();
-    void addZoom(const Zoom& zoom);
     void writeBitmap(string name);
 
 private:
