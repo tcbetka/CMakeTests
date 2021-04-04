@@ -17,6 +17,17 @@ using std::uint8_t;
 
 class FractalCreator
 {
+public:
+    FractalCreator(int width, int height);
+    void run(string name);
+
+private:
+    void calculateIteration();
+    void calculateTotalIterations();
+    void drawFractal();
+    void addZoom(const Zoom& zoom);
+    void writeBitmap(string name);
+
 private:
     int mWidth{0};
     int mHeight{0};
@@ -25,15 +36,6 @@ private:
     Bitmap mBitmap;
     ZoomList mZoomList;
     int mTotalIterations{0};
-
-public:
-    FractalCreator(int width, int height);
-
-    void calculateIteration();
-    void calculateTotalIterations();
-    void drawFractal();
-    void addZoom(const Zoom& zoom);
-    void writeBitmap(string name);
 };
 
 #endif // FRACTAL_CREATOR_h

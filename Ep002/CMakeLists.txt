@@ -12,7 +12,8 @@ add_executable(appBinary
         source/Bitmap.cpp 
         source/Mandlebrot.cpp 
         source/ZoomList.cpp
-        source/FractalCreator.cpp) 
+        source/FractalCreator.cpp
+        source/RGB.cpp) 
 
 target_compile_features(appBinary PRIVATE cxx_std_20)
 

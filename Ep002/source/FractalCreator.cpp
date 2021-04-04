@@ -14,6 +14,16 @@ FractalCreator::FractalCreator(int width, int height) :
     addZoom(Zoom(mWidth/2, mHeight/2, 4.0/mWidth));
 }
 
+void FractalCreator::run(string name)
+{
+    addZoom(Zoom(295, mHeight - 202, 0.1));
+    addZoom(Zoom(312, mHeight - 304, 0.1));
+    calculateIteration();
+    calculateTotalIterations();
+    drawFractal();
+    writeBitmap(name);   
+}
+
 void FractalCreator::calculateIteration()
 {
     for (int y = 0; y < mHeight; y++) 
