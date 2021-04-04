@@ -18,7 +18,7 @@ using std::pow;
 
 #include "Bitmap.h"
 #include "Mandlebrot.h"
-#include "Zoom.h"
+#include "ZoomList.h"
 
 
 int main()
