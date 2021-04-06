@@ -114,7 +114,7 @@ void FractalCreator::drawFractal()
     {
         for (int x = 0; x < mWidth; x++) 
         {
-            int iterations = mFractal[y * mWidth + x];
+            int iterations = mFractal[(y * mWidth) + x];
             int range = getRange(iterations);
             int rangeTotal = mRangeTotals[range];
             int rangeStart = mRanges[range];
