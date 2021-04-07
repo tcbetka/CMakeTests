@@ -45,8 +45,7 @@ bool Screen::init()
 
     m_buffer = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]{0};
 
-    // Set all bytes in the pixel buffer to be white (0xffffffff)
-    memset(m_buffer, 0xff000000, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
+    clearScreen();
 
     for (int i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++) {
         m_buffer[i] = 0x00000000;
@@ -87,6 +86,11 @@ void Screen::updateScreen()
     SDL_RenderClear(m_renderer);
     SDL_RenderCopy(m_renderer, m_texture, nullptr, nullptr);
     SDL_RenderPresent(m_renderer);
+}
+
+void Screen::clearScreen()
+{
+    memset(m_buffer, 0xff000000, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 }
 
 void Screen::close()

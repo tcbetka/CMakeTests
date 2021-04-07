@@ -29,8 +29,12 @@ int main()
     Swarm swarm;
 
     while(true) {
-        // Update particles
 
+        // Clear the screen and then update particle positions
+        screen.clearScreen();
+        swarm.updateSwarm();
+
+        // Update particle color
         int elapsed = SDL_GetTicks();
 
         unsigned char red = static_cast<unsigned char>((1 + sin(elapsed * 0.0007)) * 128);
@@ -44,7 +48,7 @@ int main()
             int x = (p.m_x + 1) * Screen::SCREEN_WIDTH / 2;
             int y = (p.m_y + 1) * Screen::SCREEN_HEIGHT / 2;
             screen.setPixel(x, y, red, green, blue);
-       }
+        }
 
         /*
         // Draw particles
@@ -54,7 +58,6 @@ int main()
             }
         }
         */
-
 
         // Draw the screen
         screen.updateScreen();
