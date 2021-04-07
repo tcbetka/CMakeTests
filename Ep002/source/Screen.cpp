@@ -45,37 +45,43 @@ bool Screen::init()
 
     m_buffer = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]{0};
 
-    // Set all bytes in the pixel buffer to be black (0x00)
-    memset(m_buffer, 0x00, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
+    // Set all bytes in the pixel buffer to be white (0xffffffff)
+    memset(m_buffer, 0xff000000, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 
-    SDL_UpdateTexture(m_texture, nullptr, m_buffer, SCREEN_WIDTH * sizeof(Uint32));
-    SDL_RenderClear(m_renderer);
-    SDL_RenderCopy(m_renderer, m_texture, nullptr, nullptr);
-    SDL_RenderPresent(m_renderer);
+    for (int i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++) {
+        m_buffer[i] = 0xffffff00;
+    }
 
     return true;
 }
 
 bool Screen::processEvents()
 {
-    bool quit = false;
     SDL_Event event;
-    while(!quit) {
-        // Update particles
-
-        // Draw particles
-
-        // Check for messages/events
-  
-            while (SDL_PollEvent(&event)) {
-                // User clicked the 'X' to close the screen
-                if (event.type == SDL_QUIT) {
-                    quit = true;
-                }
-            }
+    while (SDL_PollEvent (&event)) {
+        // User clicked the 'X' to close the screen
+        if (event.type == SDL_QUIT) {
+            return false;
         }
+    }
+    return true;
+}
 
-    return false;
+void Screen::setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue)
+{
+    Uint32 color = (0xff << 24) + (red << 16) + (green << 8) + blue;
+
+    // Move down 'y' number of rows, and then move over by 'x'
+    m_buffer[(y * SCREEN_WIDTH) + x] = color;
+}
+
+void Screen::updateScreen()
+{
+    // Draw the screen
+    SDL_UpdateTexture(m_texture, nullptr, m_buffer, SCREEN_WIDTH * sizeof(Uint32));
+    SDL_RenderClear(m_renderer);
+    SDL_RenderCopy(m_renderer, m_texture, nullptr, nullptr);
+    SDL_RenderPresent(m_renderer);
 }
 
 void Screen::close()

@@ -9,17 +9,30 @@ using std::endl;
 int main() 
 {
     Screen screen;
-    screen.init();
+    if (!screen.init()) {
+        cout << "SDL Init failure. Good-bye." << endl;
+        return 1;
+    }
+    cout << "SDL Init succeeded!" << endl;
 
-    cout << "SDL succeeded!" << endl;
+    while(true) {
+        // Update particles
 
+        // Draw particles
+        for (int y = 0; y < Screen::SCREEN_HEIGHT; y++) {
+            for (int x = 0; x < Screen::SCREEN_WIDTH; x++) {
+                screen.setPixel(x, y, 255, 255, 0);
+            }
+        }
 
-    // Now mess with certain pixels
-    //buffer[30000] = 0x00FFFFFF; // ARGB
-    //for (int i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++) {
-    //    buffer[i] = 0x00FFFF00; //  ARGB
-    //}
-    screen.processEvents();
+        // Draw the screen
+        screen.updateScreen();
+
+        // Check for messages/events
+        if (!screen.processEvents()) {
+            break;
+        }
+    }
 
     screen.close();
 
