@@ -49,7 +49,7 @@ bool Screen::init()
     memset(m_buffer, 0xff000000, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 
     for (int i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++) {
-        m_buffer[i] = 0xffffff00;
+        m_buffer[i] = 0x00000000;
     }
 
     return true;
@@ -69,6 +69,11 @@ bool Screen::processEvents()
 
 void Screen::setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue)
 {
+    // Don't plot pixels that are off the screen
+    if (x < 0 || x >= SCREEN_WIDTH || y < 0 || y >= SCREEN_HEIGHT) {
+        return;
+    }
+
     Uint32 color = (0xff << 24) + (red << 16) + (green << 8) + blue;
 
     // Move down 'y' number of rows, and then move over by 'x'
