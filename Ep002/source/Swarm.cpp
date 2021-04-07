@@ -16,9 +16,13 @@ const Particle* const Swarm::getParticles() const
     return m_pParticles;
 }
 
-void Swarm::updateSwarm()
+void Swarm::updateSwarm(int elapsed)
 {
+    int interval = elapsed - m_lastTime;
+
     for (int i = 0; i < N_PARTICLES; i++) {
-        m_pParticles[i].updatePosition();
+        m_pParticles[i].updatePosition(interval);
     }
+
+    m_lastTime = elapsed;
 }

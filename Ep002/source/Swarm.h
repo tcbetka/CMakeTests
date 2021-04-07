@@ -7,6 +7,7 @@ class Swarm
 {
 private:
     Particle* m_pParticles{nullptr};
+    int m_lastTime{0};
 
 public:
     static constexpr int N_PARTICLES = 5000;
@@ -14,7 +15,7 @@ public:
     Swarm();
     ~Swarm();
     const Particle* const getParticles() const;
-    void updateSwarm();
+    void updateSwarm(int elapsed);
 
 };
 

@@ -12,7 +12,7 @@ struct Particle
 
 
     Particle();
-    void updatePosition();
+    void updatePosition(int interval);
 };
 
 #endif // PARTICLE_H

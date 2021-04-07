@@ -31,15 +31,16 @@ int main()
 
     Swarm swarm;
 
-    while(true) {
+    while(true) 
+    {
+        // Grab the time since the program started
+        int elapsed = SDL_GetTicks();
 
         // Clear the screen and then update particle positions
         screen.clearScreen();
-        swarm.updateSwarm();
+        swarm.updateSwarm(elapsed);
 
         // Update particle color
-        int elapsed = SDL_GetTicks();
-
         unsigned char red = static_cast<unsigned char>((1 + sin(elapsed * 0.0007)) * 128);
         unsigned char green = static_cast<unsigned char>((1 + sin(elapsed * 0.0008)) * 128);
         unsigned char blue = static_cast<unsigned char>((1 + sin(elapsed * 0.0009)) * 128);
