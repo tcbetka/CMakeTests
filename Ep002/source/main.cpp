@@ -14,6 +14,9 @@ using std::time;
 #include "Screen.h"
 #include "Swarm.h"
 
+static constexpr double HALF_SCREEN_WIDTH = Screen::SCREEN_WIDTH / 2;
+static constexpr double HALF_SCREEN_HEIGHT = Screen::SCREEN_HEIGHT / 2;
+
 int main() 
 {
     // Seed our RNG
@@ -43,10 +46,10 @@ int main()
 
         const Particle* const pParticles = swarm.getParticles();
         for (int i = 0; i < Swarm::N_PARTICLES; i++) {
-            Particle p = pParticles[i];
+            Particle particle = pParticles[i];
 
-            int x = (p.m_x + 1) * Screen::SCREEN_WIDTH / 2;
-            int y = (p.m_y + 1) * Screen::SCREEN_HEIGHT / 2;
+            int x = (particle.m_x + 1) * HALF_SCREEN_WIDTH;
+            int y = (particle.m_y * HALF_SCREEN_WIDTH) + HALF_SCREEN_HEIGHT;
             screen.setPixel(x, y, red, green, blue);
         }
 

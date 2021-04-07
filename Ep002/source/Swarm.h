@@ -9,7 +9,7 @@ private:
     Particle* m_pParticles{nullptr};
 
 public:
-    static constexpr int N_PARTICLES = 1500;
+    static constexpr int N_PARTICLES = 5000;
 
     Swarm();
     ~Swarm();
