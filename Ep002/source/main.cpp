@@ -2,7 +2,8 @@
 using std::cout;
 using std::endl;
 
-#include <SDL.h>
+#include <cmath>
+using std::sin;
 
 #include "Screen.h"
 
@@ -17,11 +18,15 @@ int main()
 
     while(true) {
         // Update particles
+        int elapsed = SDL_GetTicks();
+        unsigned char red = static_cast<unsigned char>((1 + sin(elapsed * 0.0007)) * 128);
+        unsigned char green = static_cast<unsigned char>((1 + sin(elapsed * 0.0008)) * 128);
+        unsigned char blue = static_cast<unsigned char>((1 + sin(elapsed * 0.0009)) * 128);
 
         // Draw particles
         for (int y = 0; y < Screen::SCREEN_HEIGHT; y++) {
             for (int x = 0; x < Screen::SCREEN_WIDTH; x++) {
-                screen.setPixel(x, y, 255, 255, 0);
+                screen.setPixel(x, y, red, green, blue);
             }
         }
 
@@ -33,7 +38,7 @@ int main()
             break;
         }
     }
-
+    
     screen.close();
 
     return 0;
