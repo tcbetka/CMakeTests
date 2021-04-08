@@ -10,7 +10,7 @@ private:
     int m_lastTime{0};
 
 public:
-    static constexpr int N_PARTICLES = 5000;
+    static constexpr int N_PARTICLES = 10;
 
     Swarm();
     ~Swarm();

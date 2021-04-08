@@ -4,6 +4,10 @@ using std::endl;
 
 #include <cmath>
 using std::sin;
+using std::cos;
+
+#include <iomanip>
+using std::hex;
 
 #include <cstdlib>
 using std::srand;
@@ -33,35 +37,33 @@ int main()
 
     while(true) 
     {
+        cout << "Foo!" << endl;
+
         // Grab the time since the program started
         int elapsed = SDL_GetTicks();
 
-        // Clear the screen and then update particle positions
-        screen.clearScreen();
-        swarm.updateSwarm(elapsed);
+        // Update particle positions
+        //swarm.updateSwarm(elapsed);
 
         // Update particle color
-        unsigned char red = static_cast<unsigned char>((1 + sin(elapsed * 0.0007)) * 128);
-        unsigned char green = static_cast<unsigned char>((1 + sin(elapsed * 0.0008)) * 128);
-        unsigned char blue = static_cast<unsigned char>((1 + sin(elapsed * 0.0009)) * 128);
+        unsigned char red = (unsigned char)((1 + sin(elapsed * 0.0001)) * 128);
+        cout << "red: " << (int)red << endl;
+        unsigned char green = (unsigned char)((1 + sin(elapsed * 0.0002)) * 128);
+        cout << "green: " << (int)green << endl;
+        unsigned char blue = (unsigned char)((1 + sin(elapsed * 0.0003)) * 128);
+        cout << "blue: " << (int)blue << endl;
 
         const Particle* const pParticles = swarm.getParticles();
-        for (int i = 0; i < Swarm::N_PARTICLES; i++) {
-            Particle particle = pParticles[i];
+        
+        // for (int i = 0; i < Swarm::N_PARTICLES; i++) {
+        //     Particle particle = pParticles[i];
 
-            int x = (particle.m_x + 1) * HALF_SCREEN_WIDTH;
-            int y = (particle.m_y * HALF_SCREEN_WIDTH) + HALF_SCREEN_HEIGHT;
-            screen.setPixel(x, y, red, green, blue);
-        }
+        //     int x = (particle.m_x + 1) * HALF_SCREEN_WIDTH;
+        //     int y = (particle.m_y * HALF_SCREEN_WIDTH) + HALF_SCREEN_HEIGHT;
+        //     screen.setPixel(x, y, red, green, blue);
+        // }
 
-        /*
-        // Draw particles
-        for (int y = 0; y < Screen::SCREEN_HEIGHT; y++) {
-            for (int x = 0; x < Screen::SCREEN_WIDTH; x++) {
-                screen.setPixel(x, y, red, green, blue);
-            }
-        }
-        */
+        screen.boxBlur();
 
         // Draw the screen
         screen.updateScreen();
@@ -70,6 +72,8 @@ int main()
         if (!screen.processEvents()) {
             break;
         }
+
+        SDL_Delay(1000);
     }
     
     screen.close();

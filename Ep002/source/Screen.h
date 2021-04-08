@@ -9,7 +9,8 @@ private:
     SDL_Window* m_window{nullptr};
     SDL_Renderer* m_renderer{nullptr};
     SDL_Texture* m_texture{nullptr};
-    Uint32* m_buffer{nullptr};
+    Uint32* m_pixelBuffer{nullptr};
+    Uint32* m_blurBuffer{nullptr};
 
 public:
     static constexpr int SCREEN_WIDTH{800};
@@ -20,7 +21,7 @@ public:
     bool processEvents();
     void setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue);
     void updateScreen();
-    void clearScreen();
+    void boxBlur();
     void close();
 };
 
